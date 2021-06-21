@@ -92,13 +92,13 @@ int		pa_pb(t_stack **head_from, t_stack **head_to)
 	return (0);	
 }
 
-int 	ra_rb(t_stack **head)
+int 	ra_rb(t_stack **stack_ab)
 {
 	t_stack	*temptop;
 	t_stack	*templast;
 	t_stack *stack;
 
-	stack = *head;
+	stack = *stack_ab;
 	if (!(stack && stack->next))
 		return (0);
 	temptop = stack;
@@ -108,17 +108,17 @@ int 	ra_rb(t_stack **head)
 		templast = templast->next;
 	templast->next = temptop;
 	temptop->next = NULL;
-	*head = stack;
+	*stack_ab = stack;
 	return (0);
 }
 
-int		rra_rrb(t_stack **head)
+int		rra_rrb(t_stack **stack_ab)
 {
 	t_stack	*templast;
 	t_stack	*previous;
 	t_stack *stack;
 
-	stack = *head;
+	stack = *stack_ab;
 	if (!(stack && stack->next))
 		return (0);
 	templast = stack;
@@ -129,7 +129,28 @@ int		rra_rrb(t_stack **head)
 	}
 	templast->next = stack;
 	previous->next = NULL;
-	*head = templast;
+	*stack_ab = templast;
+	return (0);
+}
+
+int		ss(t_stack **stack_a, t_stack **stack_b)
+{
+	sa_sb(stack_a);
+	sa_sb(stack_b);
+	return (0);
+}
+
+int		rr(t_stack **stack_a, t_stack **stack_b)
+{
+	ra_rb(stack_a);
+	ra_rb(stack_b);
+	return (0);
+}
+	
+int		rrr(t_stack **stack_a, t_stack **stack_b)
+{
+	rra_rrb(stack_a);
+	rra_rrb(stack_b);
 	return (0);
 }
 
@@ -325,12 +346,42 @@ void	orderlow(t_stack **stack)
 	free(array);
 	return;
 }
+   
+int mid_insertionSort(int *array, int n) 
+{ 
+	int i;
+	int j;
+	int element;
+	int	midpoint;
+ 
+	i = 1;
+	while (i < n)
+	{ 
+		element = array[i]; 
+		j = i - 1;
+		while (j >= 0 && array[j] > element) 
+		{ 
+			array[j + 1] = array[j]; 
+            j = j - 1; 
+        } 
+        array[j + 1] = element;
+		i++;
+    }
+	midpoint = array[(n/2)];
+	return(midpoint);
+}
+
+int	movechunk(t_stack **stack_a, t_stack **stack_b, int midpoint)
+{
+	
+}
 
 int	main(int argc, char **argv)
 {
 	t_stack	*stack_a;
 	t_stack	*stack_b;
 	int	len;
+	int midpoint;
 
 	if (!(stack_a = copy_args_in_stack(argc, argv)))
 	{
@@ -341,5 +392,6 @@ int	main(int argc, char **argv)
 	stack_b = NULL;
 	if (len < 4)
 		orderlow(&stack_a);
+	movechunk(stack_a, stack_b, midpoint);
 	return (0);
 }

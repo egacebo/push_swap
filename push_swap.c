@@ -133,13 +133,6 @@ int		rra_rrb(t_stack **stack_ab)
 	return (0);
 }
 
-int		ss(t_stack **stack_a, t_stack **stack_b)
-{
-	sa_sb(stack_a);
-	sa_sb(stack_b);
-	return (0);
-}
-
 int		rr(t_stack **stack_a, t_stack **stack_b)
 {
 	ra_rb(stack_a);
@@ -210,6 +203,24 @@ void	delete_stack(t_stack **stack)
 	*stack = NULL;
 }
 
+void	printarray(t_stack **stack)
+{
+	int i;
+	int l;
+	int *matrix;
+
+	i = 0;
+	l = s_len(*stack);
+	matrix = create_array_from_stack(*stack, l);
+	while (i < l)
+	{
+		printf("el termino %d del array es %d \n", i, matrix[i]);
+		i++;
+	}
+	free (matrix);
+	return; 
+}
+
 int 	check_duplicates(t_stack **stack)
 {
 	int i;
@@ -217,14 +228,7 @@ int 	check_duplicates(t_stack **stack)
 	int len; 
 	int *array;
 
-	i = 0;
-	len = s_len(*stack);
-	array = create_array_from_stack(*stack, len);
-	while (i < len)
-	{
-		printf("el termino %d del array es %d \n", i, array[i]);
-		i++;
-	}
+	printarray(stack);
 	i = 0;
 	while (i < len)
 	{
@@ -336,14 +340,7 @@ void	orderlow(t_stack **stack)
 	}
 	else if (len == 3)
 		orderthree(stack);
-	i = 0;
-	array = create_array_from_stack(*stack, len);
-	while (i < len)
-	{
-		printf("el termino %d del array es %d \n", i, array[i]);
-		i++;
-	}
-	free(array);
+	printarray(stack);
 	return;
 }
    
@@ -368,12 +365,48 @@ int mid_insertionSort(int *array, int n)
 		i++;
     }
 	midpoint = array[(n/2)];
+	printf("El midpoint del array es %d\n", midpoint);
 	return(midpoint);
 }
 
 int	movechunk(t_stack **stack_a, t_stack **stack_b, int midpoint)
 {
+	t_stack *stacktemp;
+
+	int i;
+	int len;
+	int *array;
 	
+	printf("stack a\n");
+	printarray(stack_a);
+	if ((*stack_a)->num < midpoint)
+	{
+		while ((*stack_a)->num < midpoint)
+		{
+			pa_pb(stack_a, stack_b);
+			printf("pa\n");
+			(*stack_a) = (*stack_a)->next;
+		}
+	}
+	printf("stack_a\n");
+	printarray(stack_a);
+	printf("stack_b\n");
+	printarray(stack_b);
+	if ((*stack_a)->num >= midpoint)
+	{
+		stacktemp = (*stack_a);
+		while(stacktemp->next)
+			stacktemp = stacktemp->next;
+		if (stacktemp->num < midpoint)
+			while (stacktemp->num < midpoint)
+			{
+				rra_rrb(stack_a);
+				printf("rra\n");
+				pa_pb(stack_a, stack_b);
+				printf("pa\n");
+			}
+	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -389,9 +422,13 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	len = s_len(stack_a);
+	printf("El numero de terminos es %d", len);
 	stack_b = NULL;
-	if (len < 4)
+	printf("El stack original es: \n");
+	printarray(&stack_a);
+	if (len <= 4)
 		orderlow(&stack_a);
-	movechunk(stack_a, stack_b, midpoint);
+	else if (len > 4)
+		movechunk(&stack_a, &stack_b, midpoint);
 	return (0);
 }
